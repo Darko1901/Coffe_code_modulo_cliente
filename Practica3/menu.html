@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffe Code</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f5f0eb;
+            display: flex;
+            justify-content: center;
+            padding: 40px 16px;
+        }
+
+        .menu-container {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 520px;
+            overflow: hidden;
+        }
+
+        .menu-header {
+            background-color: #c0392b;
+            color: white;
+            text-align: center;
+            padding: 28px 20px;
+        }
+
+        .menu-header h1 {
+            font-size: 1.8rem;
+            letter-spacing: 1px;
+        }
+
+        .menu-header p {
+            margin-top: 6px;
+            font-size: 0.9rem;
+            opacity: 0.85;
+        }
+
+        /* Secciones CRUD */
+        .seccion {
+            padding: 20px;
+            border-bottom: 1px solid #ece5de;
+        }
+
+        .seccion h2 {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #c0392b;
+            margin-bottom: 12px;
+        }
+
+        .fila-inputs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        input {
+            flex: 1;
+            min-width: 100px;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #c0392b;
+        }
+
+        button {
+            padding: 10px 18px;
+            background-color: #c0392b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #a93226;
+        }
+
+        /* Lista de productos */
+        #lista {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        #lista .producto-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fdf6f0;
+            border: 1px solid #e8ddd4;
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+
+        #lista .producto-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        #lista .producto-nombre {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #2c2c2c;
+        }
+
+        #lista .producto-id {
+            font-size: 0.75rem;
+            color: #999;
+        }
+
+        #lista .producto-precio {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #c0392b;
+        }
+
+        /* Resultado de búsqueda */
+        #resultado {
+            margin-top: 12px;
+        }
+
+        #resultado .producto-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fdf6f0;
+            border: 1px solid #e8ddd4;
+            border-radius: 10px;
+            padding: 14px 18px;
+        }
+
+        #resultado .producto-nombre {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #2c2c2c;
+        }
+
+        #resultado .producto-id {
+            font-size: 0.75rem;
+            color: #999;
+        }
+
+        #resultado .producto-precio {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #c0392b;
+        }
+
+        #resultado .no-encontrado {
+            font-size: 0.9rem;
+            color: #999;
+            text-align: center;
+            padding: 12px;
+        }
+
+        /* Promociones */
+        .promo-lista {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            padding-top: 12px;
+        }
+
+        .promo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff8e1;
+            border: 1px solid #f5c518;
+            border-radius: 10px;
+            padding: 14px 18px;
+            position: relative;
+        }
+
+        .promo-badge {
+            position: absolute;
+            top: -10px;
+            right: 14px;
+            background-color: #f5c518;
+            color: #2c2c2c;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        .promo-info {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+
+        .promo-nombre {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #2c2c2c;
+        }
+
+        .promo-detalle {
+            font-size: 0.75rem;
+            color: #888;
+        }
+
+        .promo-precios {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 2px;
+        }
+
+        .promo-precio-antes {
+            font-size: 0.75rem;
+            color: #bbb;
+            text-decoration: line-through;
+        }
+
+        .promo-precio-ahora {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #c0392b;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="menu-container">
+        <div class="menu-header">
+            <h1>Coffe Code</h1>
+            <p>Gestión de productos de cocina</p>
+        </div>
+
+        <!-- PROMOCIONES -->
+        <div class="seccion">
+            <h2>Promociones del día</h2>
+            <div class="promo-lista">
+
+                <div class="promo-item">
+                    <span class="promo-badge">Ahorra $8.98</span>
+                    <div class="promo-info">
+                        <span class="promo-nombre">Combo Mexicano</span>
+                        <span class="promo-detalle">Enchiladas verdes + Tacos dorados</span>
+                    </div>
+                    <div class="promo-precios">
+                        <span class="promo-precio-antes">$46.98</span>
+                        <span class="promo-precio-ahora">$38.00</span>
+                    </div>
+                </div>
+
+                <div class="promo-item">
+                    <span class="promo-badge">Ahorra $14.00</span>
+                    <div class="promo-info">
+                        <span class="promo-nombre">Menú del Chef</span>
+                        <span class="promo-detalle">Chile relleno + Guajalote</span>
+                    </div>
+                    <div class="promo-precios">
+                        <span class="promo-precio-antes">$94.00</span>
+                        <span class="promo-precio-ahora">$80.00</span>
+                    </div>
+                </div>
+
+                <div class="promo-item">
+                    <span class="promo-badge">2x1</span>
+                    <div class="promo-info">
+                        <span class="promo-nombre">Doble Taquiza</span>
+                        <span class="promo-detalle">2 porciones de Tacos dorados</span>
+                    </div>
+                    <div class="promo-precios">
+                        <span class="promo-precio-antes">$41.98</span>
+                        <span class="promo-precio-ahora">$20.99</span>
+                    </div>
+                </div>
+
+                <div class="promo-item">
+                    <span class="promo-badge">Ahorra $16.99</span>
+                    <div class="promo-info">
+                        <span class="promo-nombre">Combo Americano</span>
+                        <span class="promo-detalle">Hamburguesa clásica + Enchiladas verdes</span>
+                    </div>
+                    <div class="promo-precios">
+                        <span class="promo-precio-antes">$90.99</span>
+                        <span class="promo-precio-ahora">$74.00</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- CREATE -->
+        <div class="seccion">
+            <h2>Agregar producto</h2>
+            <div class="fila-inputs">
+                <input type="text" id="nombre" placeholder="Nombre del producto">
+                <input type="number" id="precio" placeholder="Precio" step="0.01">
+                <button onclick="agregar(); listar()">Agregar</button>
+            </div>
+        </div>
+
+        <!-- READ - Listar -->
+        <div class="seccion">
+            <h2>Lista de productos</h2>
+            <button onclick="listar()">Mostrar todos</button>
+            <div id="lista"></div>
+        </div>
+
+        <!-- READ - Buscar -->
+        <div class="seccion">
+            <h2>Buscar por ID</h2>
+            <div class="fila-inputs">
+                <input type="number" id="buscaId" placeholder="ID del producto">
+                <button onclick="buscar()">Buscar</button>
+            </div>
+            <div id="resultado"></div>
+        </div>
+
+        <!-- UPDATE -->
+        <div class="seccion">
+            <h2>Actualizar precio</h2>
+            <div class="fila-inputs">
+                <input type="number" id="updateId" placeholder="ID del producto">
+                <input type="number" id="updatePrecio" placeholder="Nuevo precio" step="0.01">
+                <button onclick="actualizar(); listar()">Actualizar</button>
+            </div>
+        </div>
+
+        <!-- DELETE -->
+        <div class="seccion">
+            <h2>Eliminar producto</h2>
+            <div class="fila-inputs">
+                <input type="number" id="deleteId" placeholder="ID del producto">
+                <button onclick="eliminar(); listar()">Eliminar</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="cocina.js"></script>
+    <script>
+        // Sobreescribe listar() para usar tarjetas estilizadas
+        function listar() {
+            let html = "";
+            productoscocina.forEach(p => {
+                html += `
+                    <div class="producto-item">
+                        <div class="producto-info">
+                            <span class="producto-nombre">${p.nombre}</span>
+                            <span class="producto-id">ID: ${p.id}</span>
+                        </div>
+                        <span class="producto-precio">$${p.precio.toFixed(2)}</span>
+                    </div>
+                `;
+            });
+            document.getElementById("lista").innerHTML = html;
+        }
+
+        // Sobreescribe buscar() para usar tarjetas estilizadas
+        function buscar() {
+            const id = parseInt(document.getElementById("buscaId").value);
+            const producto = productoscocina.find(p => p.id === id);
+
+            if (producto) {
+                document.getElementById("resultado").innerHTML = `
+                    <div class="producto-item">
+                        <div class="producto-info">
+                            <span class="producto-nombre">${producto.nombre}</span>
+                            <span class="producto-id">ID: ${producto.id}</span>
+                        </div>
+                        <span class="producto-precio">$${producto.precio.toFixed(2)}</span>
+                    </div>
+                `;
+            } else {
+                document.getElementById("resultado").innerHTML =
+                    `<p class="no-encontrado">Producto no encontrado</p>`;
+            }
+        }
+
+        listar();
+    </script>
+
+</body>
+</html>
